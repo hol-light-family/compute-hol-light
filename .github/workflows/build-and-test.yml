@@ -7,14 +7,6 @@ on:
         description: 'The runner to build on. Linux and MacOS are supported.'
         type: string
         default: 'ubuntu-24.04'
-      hol-light-repository:
-        description: 'The HOL Light repository to build against.'
-        type: string
-        default: 'jrh13/hol-light'
-      hol-light-ref:
-        description: 'The HOL Light branch, tag or commit to build against.'
-        type: string
-        required: true
 
 permissions:
   contents: read
@@ -27,7 +19,7 @@ env:
 jobs:
   build-and-test:
     runs-on: ${{ inputs.runs-on }}
-    name: ${{ inputs.runs-on }}, OCaml 5.4, camlp5 8.04
+    name: ${{ inputs.runs-on }}, make switch-5
     timeout-minutes: 180
 
     steps:
@@ -60,8 +52,8 @@ jobs:
       - name: Checkout HOL Light
         uses: actions/checkout@v7
         with:
-          repository: ${{ inputs.hol-light-repository }}
-          ref: ${{ inputs.hol-light-ref }}
+          repository: jrh13/hol-light
+          ref: 217dd32e798d98926d3ab81ed3dfcdf435831e1f
           path: hol-light
 
       - name: Checkout this repository
@@ -90,6 +82,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: logs-${{ inputs.runs-on }}-${{ inputs.hol-light-ref }}
+          name: logs-${{ inputs.runs-on }}
           path: compute-hol-light/ci-*.log
           if-no-files-found: ignore
